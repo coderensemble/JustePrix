@@ -27,8 +27,7 @@ function play() {
   
   let totalLifes = 6;
   let lifes = totalLifes;
-  
-  
+    
   //Actualisation et algorythme
   formulaire.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -95,6 +94,7 @@ function play() {
             });
         };
         checkHearts(lifes);
+        
     }
     
     play();
