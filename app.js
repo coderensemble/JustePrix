@@ -1,10 +1,10 @@
 //Elements du DOM
 const divHearts = document.querySelector(".vies");
+const message = document.getElementById("message");
+const formulaire = document.getElementById("inputBox");
 const input = document.getElementById("number");
 const tryBtn = document.getElementById("tryBtn");
 const restart = document.getElementById("restart");
-const message = document.getElementById("message");
-const formulaire = document.getElementById("inputBox");
 const body = document.getElementsByTagName("body")[0];
 
 //Modèles de coeurs
@@ -22,69 +22,80 @@ const bgLoose = "linear-gradient(-225deg, #473B7B 0%, #3584A7 51%, #30D2BE 100%)
 
 function play() {
   //Variable du jeu
-  let nbrToGuess = Math.ceil(Math.random() * 100);
+  let nbrToGuess = Math.floor(Math.random() * 101);
   console.log("Nombre à deviner:", nbrToGuess);
-
+  
   let totalLifes = 6;
   let lifes = totalLifes;
-
+  
+  
   //Actualisation et algorythme
   formulaire.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const valeurInput = parseInt(input.value);
-    console.log("valeur:", valeurInput);
-
-    if (valeurInput < 0 || valeurInput > 100) return;
-
-    if (valeurInput === nbrToGuess) {
-      body.style.backgroundImage = bgWin;
-      message.textContent = `Félicitation, vous avez gagné! Le nombre était ${nbrToGuess}`;
-      restart.style.display = "block";
-    }
-
-    if (valeurInput !== nbrToGuess) {
-      if (nbrToGuess < valeurInput + 3 && nbrToGuess > valeurInput - 3) {
-        body.style.backgroundImage = bgHot;
-        message.textContent = "C'est brûlant !";
-      } else if (nbrToGuess < valeurInput + 6 && nbrToGuess > valeurInput - 6) {
-        body.style.backgroundImage = bgWarm;
-        message.textContent = "C'est chaud !";
-      } else if (nbrToGuess < valeurInput + 11 && nbrToGuess > valeurInput - 11) {
-        body.style.backgroundImage = bgLukewarm;
-        message.textContent = `C'est tiède !`;
-      } else {
-        body.style.backgroundImage = bgCold;
-        message.textContent = "C'est froid !";
-      }
-      lifes--;
-      verifyLoose();
-    }
-  });
-
-  const verifyLoose = () => {
-    if (lifes === 0) {
-      body.style.backgroundImage = bgLoose;
-      message.textContent = `Vous avez perdu ! La réponse était ${nbrToGuess}`;
-      restart.setAttribute("disabled", "");
-      restart.style.display = "block";
-    }
-  };
-
-  const checkHearts = (lifes) => {
-    divHearts.innerHTML = "";
-    let arrayHearts = [];
-    for (let i = 0; i < lifes; i++) {
-      arrayHearts.push(fullHeart);
-    }
-    for (let i = 0; i < totalLifes - lifes; i++) {
-      arrayHearts.push(emptyHeart);
-    }
-    arrayHearts.forEach((heart) => {
-      divHearts.innerHTML += heart;
+      e.preventDefault();
+      
+      const valeurInput = parseInt(input.value);
+      
+      if (valeurInput < 0 || valeurInput > 100) return;
+      
+      if (valeurInput === nbrToGuess) {
+          body.style.backgroundImage = bgWin;
+          message.textContent = `Félicitation, vous avez gagné! Le nombre était ${nbrToGuess}`;
+          restart.style.display = "block";
+          restart.addEventListener("click", function () {
+              window.location.reload();
+            });
+        }
+        
+        if (valeurInput !== nbrToGuess) {
+            if (nbrToGuess < valeurInput + 3 && nbrToGuess > valeurInput - 3) {
+                body.style.backgroundImage = bgHot;
+                message.textContent = "C'est brûlant !";
+            } else if (nbrToGuess < valeurInput + 6 && nbrToGuess > valeurInput - 6) {
+                body.style.backgroundImage = bgWarm;
+                message.textContent = "C'est chaud !";
+            } else if (nbrToGuess < valeurInput + 11 && nbrToGuess > valeurInput - 11) {
+                body.style.backgroundImage = bgLukewarm;
+                message.textContent = `C'est tiède !`;
+            } else {
+                body.style.backgroundImage = bgCold;
+                message.textContent = "C'est froid !";
+            }
+            lifes--;
+            verifyLoose();
+        }
+        checkHearts(lifes);
+        restart.addEventListener("click", () => {
+            message.style.display = "none";
+            document.location.reload(true);
+        });
     });
-  };
-  checkHearts(lifes);
-}
-
-play();
+    
+    const verifyLoose = () => {
+        if (lifes === 0) {
+            body.style.backgroundImage = bgLoose;
+            message.textContent = `Vous avez perdu ! La réponse était ${nbrToGuess}`;
+            restart.style.display = "block";
+            restart.addEventListener("click", function () {
+                window.location.reload();
+            });    }
+        };
+        
+        const checkHearts = (lifes) => {
+            divHearts.innerHTML = "";
+            let arrayHearts = [];
+            console.log("arrayHearts", arrayHearts);
+            for (let i = 0; i < lifes; i++) {
+                arrayHearts.push(fullHeart);
+            }
+            for (let i = 0; i < totalLifes - lifes; i++) {
+                arrayHearts.push(emptyHeart);
+            }
+            arrayHearts.forEach((heart) => {
+                divHearts.innerHTML += heart;
+            });
+        };
+        checkHearts(lifes);
+    }
+    
+    play();
+    
